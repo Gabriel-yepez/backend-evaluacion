@@ -20,7 +20,10 @@ module.exports = (sequelize)=>{
             comentario:{
                 type: DataTypes.STRING,
                 allowNull: false,
-            }
+            },
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }

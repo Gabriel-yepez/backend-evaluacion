@@ -28,8 +28,10 @@ module.exports = (sequelize)=>{
             estado_deseado:{
                 type: DataTypes.STRING,
                 allowNull: false,
-            }
-
+            },
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }

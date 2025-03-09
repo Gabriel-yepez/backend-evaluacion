@@ -36,20 +36,21 @@ ResultadoHabilidad.belongsTo(Habilidad, {foreignKey: 'id_habilidad'})
 Objetivo.belongsTo(Usuario, {foreignKey: 'id_usuario'})
 Objetivo.belongsTo(TipoObjetivo, {foreignKey: 'id_tipo_objetivo'})
 PlanMejora.belongsTo(Evaluacion, {foreignKey: 'id_evaluacion'})
+PlanMejora.belongsTo(Usuario,{foreignKey: 'id_usuario'})
 Retroalimentacion.belongsTo(Usuario, {foreignKey: 'id_usuario'})
 Retroalimentacion.belongsTo(Evaluacion, {foreignKey: 'id_evaluacion'})
 
 //sincronizar con base de datos
 /* const syncDatabase = async () => {
   try {
-      await sequelize.sync({ force: true }); // Use { force: true } to drop and recreate tables
+      await sequelize.sync({ alter: true }); // Use { force: true } to drop and recreate tables
       console.log('Database synchronized');
   } catch (error) {
       console.error('Error synchronizing database:', error);
   }
-}; */
-
-//syncDatabase();
+};   
+ 
+syncDatabase(); */
 
 module.exports={
   sequelize,

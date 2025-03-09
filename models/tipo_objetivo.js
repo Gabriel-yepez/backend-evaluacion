@@ -12,7 +12,10 @@ module.exports = (sequelize)=>{
             nombre:{
                 type: DataTypes.STRING,
                 allowNull: false,
-            }
+            },
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }

@@ -16,7 +16,10 @@ module.exports = (sequelize)=>{
             fecha:{
                 type: DataTypes.DATEONLY,
                 allowNull: false,
-            }
+            },
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }

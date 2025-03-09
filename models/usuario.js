@@ -32,7 +32,10 @@ module.exports = (sequelize)=>{
             ci:{
                 type: DataTypes.INTEGER,
                 allowNull: false,
-            }  
+            }, 
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }

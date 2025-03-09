@@ -19,7 +19,10 @@ module.exports= (sequelize)=>{
             },
             estado:{
                 type: DataTypes.BOOLEAN,
-            }
+            },
+        },{
+            freezeTableName: true,
+            timestamps: false,
         }
     )
 }
