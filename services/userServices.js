@@ -30,10 +30,7 @@ class UserServices{
             const updatedUser = await user.update(data)
             return updatedUser
         }
-        else{
-
-            throw new Error("usuaro no encontrado")
-        }
+       return user
     }
 
     async deleteUser(id){
@@ -42,9 +39,7 @@ class UserServices{
             const borrar = await user.destroy()
             return borrar !== null
         }
-        else{
-            throw new Error("usuario no encontrado")
-        }
+        return user
     }
 
 }

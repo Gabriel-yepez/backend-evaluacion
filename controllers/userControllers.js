@@ -41,11 +41,11 @@ const updateUser = async (req, res)=>{
 
     try {
         const user = await services.updateUser(req.params.id, req.body)
-        if (!user) return res.status(404).json({ message: "user not Found." });
+        if (!user) return res.status(404).json({ message: "user not Found for update." });
         res.status(200).json(user)
       } catch (error) {
         console.log(error)
-        res.stattus(500).json(error)
+        res.status(500).json(error)
       }
 }
 
@@ -53,11 +53,11 @@ const deleteUser = async (req, res)=>{
 
     try {
         const user = await services.deleteUser(req.params.id)
-        if (!user) return res.status(404).json({ message: "user not Found." });
+        if (!user) return res.status(404).json({ message: "user not Found for delete." });
         res.status(200).json(user)
       } catch (error) {
         console.log(error)
-        res.stattus(500).json(error)
+        res.status(500).json(error)
       }
 }
 
