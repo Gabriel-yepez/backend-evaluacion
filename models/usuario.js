@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize')
+const bcrypt = require('bcrypt');
 
 module.exports = (sequelize)=>{
 
@@ -36,6 +37,20 @@ module.exports = (sequelize)=>{
         },{
             freezeTableName: true,
             timestamps: false,
+            hooks: {
+                beforeCreate: async (usuario) => {
+                    if (usuario.password) {
+                        const hash = await bcrypt.hash(usuario.password, 10);
+                        usuario.password = hash;
+                    }
+                },
+                beforeUpdate: async (usuario) => {
+                    if (usuario.changed('password')) {
+                        const hash = await bcrypt.hash(usuario.password, 10);
+                        usuario.password = hash;
+                    }
+                }
+            }
         }
     )
 }

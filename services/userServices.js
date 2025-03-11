@@ -17,7 +17,7 @@ class UserServices{
         return user
     }
 
-    async getUserByfield(field){
+    async getUserByfield(field){   
         const user = await Usuario.findOne({where:field})
         return user
     }
