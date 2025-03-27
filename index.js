@@ -4,8 +4,10 @@ const routes = require('./routes/routes');
 const morgan = require('morgan');
 const app = express();
 const port = 4001;
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors())
 app.use(morgan("dev")) 
 app.use("/api", routes);
 

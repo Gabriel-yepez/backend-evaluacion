@@ -7,9 +7,14 @@ class UserServices{
         return newUser        
     }
 
-    async getAllUsers(){
-        const users =await Usuario.findAll()
-        return users
+    async getAllUsers(filter = null){
+        if(filter){
+            const users = await Usuario.findAll({where:filter})
+            return users
+        }else{
+            const users = await Usuario.findAll()
+            return users
+        }
     }
 
     async getByid(id){
@@ -40,6 +45,11 @@ class UserServices{
             return borrar !== null
         }
         return user
+    }
+
+    async getUserCount(){
+        const count= await Usuario.count()
+        return count
     }
 
 }
