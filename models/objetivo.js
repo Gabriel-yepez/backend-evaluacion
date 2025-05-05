@@ -1,37 +1,37 @@
-const {DataTypes}=require('sequelize')
+const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize)=>{
-
-    return sequelize.define('objetivo',
+module.exports = (sequelize) => {
+    return sequelize.define('objetivos', // Cambiado a "objetivos" para coincidir con el nombre de la tabla
         {
-            id:{
+            id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            descripcion:{
+            descripcion: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            fecha_inicio:{
+            fecha_inicio: {
                 type: DataTypes.DATEONLY,
                 allowNull: false,
             },
-            fecha_fin:{
+            fecha_fin: {
                 type: DataTypes.DATEONLY,
                 allowNull: false,
             },
-            estado_actual:{
+            estado_actual: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            estado_deseado:{
+            estado_deseado: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-        },{
-            freezeTableName: true,
+        },
+        {
+            freezeTableName: true, // Asegura que el nombre de la tabla sea exactamente "objetivos"
             timestamps: false,
         }
-    )
-}
+    );
+};
