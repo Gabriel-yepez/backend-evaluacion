@@ -13,6 +13,20 @@ const getEvaluacionCount = async (req, res)=>{
       }
 }
 
+const getAllEvaluacion = async (req, res)=>{
+
+    try {
+        const evaluacion = await services.getEvaluacion()
+
+        if(evaluacion.length === 0) return res.status(404).json({ message: "no evaluaciones Found."});
+        res.status(200).json(evaluacion)
+      } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+      }
+}
+
 module.exports = {
-  getEvaluacionCount
+  getEvaluacionCount,
+  getAllEvaluacion
 }
