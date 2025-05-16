@@ -1,5 +1,5 @@
+const maquetareport = require('./maquetareport');
 const PrinterServices = require('./printerServices');
-
 
 class ReportServices {
 
@@ -7,16 +7,8 @@ class ReportServices {
         this.printer = new PrinterServices();
     }
 
-    async getReport() {
-
-        const docDefinition= {
-
-            content: [
-                'hola mudno',
-                'reporte 1 hecho',
-            ]
-        }
-
+    async getReport(data) {
+        const docDefinition= await maquetareport(data);
         return this.printer.createPdf(docDefinition);
     }
 }
