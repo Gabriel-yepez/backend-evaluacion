@@ -35,4 +35,5 @@ const router = Router();
 
     // reportes
     router.get("/reportes", getReport)
+    router.post("/reportes", getReport)
     module.exports= router;
