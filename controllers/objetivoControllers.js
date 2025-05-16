@@ -38,7 +38,7 @@ const createObjetivo = async (req, res) => {
 
 const updateObjetivoEstado = async (req, res) => {
     try {
-        const objetivo = await services.updateObjetivoEstado(req.params.id, req.body.estado);
+        const objetivo = await services.updateObjetivoEstado(req.params.id, req.body);
         if (!objetivo) 
             return res.status(404).json({ message: "Objective not found for update." });
         res.status(200).json(objetivo);

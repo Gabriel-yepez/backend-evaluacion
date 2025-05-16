@@ -21,7 +21,7 @@ class ObjetivoServices {
         const objetivo = await Objetivo.findByPk(id);
 
         if (objetivo) {
-            const updatedObjetivo = await objetivo.update({ estado });
+            const updatedObjetivo = await objetivo.update( estado );
             return updatedObjetivo;
         }
 
