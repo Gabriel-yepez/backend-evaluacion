@@ -19,13 +19,13 @@ class ObjetivoServices {
 
     async updateObjetivoEstado(id, estado) {
         const objetivo = await Objetivo.findByPk(id);
+        const {estado_actual} = estado;
 
         if (objetivo) {
-            const updatedObjetivo = await objetivo.update( estado );
+            // Asegúrate de pasar un objeto con los campos a actualizar
+            const updatedObjetivo = await objetivo.update({ estado_actual });
             return updatedObjetivo;
         }
-
-        return objetivo;
     }
 
     async deleteObjetivo(id) {
