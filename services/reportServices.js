@@ -16,6 +16,19 @@ class ReportServices {
         const docDefinition = await maquetareportWithAI(data);
         return this.printer.createPdf(docDefinition);
     }
+    
+    // Nuevos métodos que devuelven tanto la definición como el stream
+    async getReportWithDefinition(data) {
+        const docDefinition = await maquetareport(data);
+        const pdfStream = this.printer.createPdf(docDefinition);
+        return { docDefinition, pdfStream };
+    }
+    
+    async getReportWithAIAndDefinition(data) {
+        const docDefinition = await maquetareportWithAI(data);
+        const pdfStream = this.printer.createPdf(docDefinition);
+        return { docDefinition, pdfStream };
+    }
 }
 
 module.exports = ReportServices;
