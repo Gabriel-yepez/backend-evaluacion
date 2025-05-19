@@ -38,5 +38,5 @@ const router = Router();
     // reportes
     router.get("/reportes", getReport)
     router.post("/reportes", getReport)
-    router.get("/reportes/ai", getReportWithAI)
+    router.post("/reportes/ai", getReportWithAI)
     module.exports= router;
