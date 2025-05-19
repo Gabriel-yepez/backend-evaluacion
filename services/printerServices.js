@@ -1,4 +1,6 @@
 const PdfPrinter = require('pdfmake');
+const fs = require('fs');
+const path = require('path');
 
 const fonts = {
   Roboto: {
@@ -9,11 +11,59 @@ const fonts = {
   }
 };
 
+// Asegurarse de que el directorio de reportes exista
+const REPORTS_DIR = path.join(__dirname, '../public/reports');
+if (!fs.existsSync(REPORTS_DIR)) {
+  fs.mkdirSync(REPORTS_DIR, { recursive: true });
+}
+
 class PrinterServices {
 
     static printer = new PdfPrinter(fonts);
+    
+    // Método para streaming del PDF (previamente existente)
     createPdf = (docDefinition) => {
         return PrinterServices.printer.createPdfKitDocument(docDefinition);
+    }
+    
+    // Nuevo método para guardar el PDF en disco y devolver la URL
+    savePdf = async (docDefinition, userId, fecha) => {
+        return new Promise((resolve, reject) => {
+            try {
+                // Crear un nombre de archivo único
+                const filename = `reporte_${userId}_${fecha}.pdf`;
+                const filePath = path.join(REPORTS_DIR, filename);
+                
+                // Crear el documento PDF
+                const pdfDoc = PrinterServices.printer.createPdfKitDocument(docDefinition);
+                
+                // Stream para escribir en archivo
+                const writeStream = fs.createWriteStream(filePath);
+                
+                // Manejar eventos
+                writeStream.on('error', (error) => {
+                    console.error('Error escribiendo PDF en disco:', error);
+                    reject(error);
+                });
+                
+                pdfDoc.on('end', () => {
+                    // Construir URL para el frontend
+                    const fileUrl = `/api/reports/${filename}`;
+                    resolve({
+                        success: true,
+                        fileUrl,
+                        filePath
+                    });
+                });
+                
+                // Pipe y finalizar
+                pdfDoc.pipe(writeStream);
+                pdfDoc.end();
+            } catch (error) {
+                console.error('Error generando PDF:', error);
+                reject(error);
+            }
+        });
     }
 }
 
