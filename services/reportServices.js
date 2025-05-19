@@ -1,4 +1,4 @@
-const maquetareport = require('./maquetareport');
+const { maquetareport, maquetareportWithAI } = require('./maquetareport');
 const PrinterServices = require('./printerServices');
 
 class ReportServices {
@@ -8,7 +8,12 @@ class ReportServices {
     }
 
     async getReport(data) {
-        const docDefinition= await maquetareport(data);
+        const docDefinition = await maquetareport(data);
+        return this.printer.createPdf(docDefinition);
+    }
+    
+    async getReportWithAI(data) {
+        const docDefinition = await maquetareportWithAI(data);
         return this.printer.createPdf(docDefinition);
     }
 }
