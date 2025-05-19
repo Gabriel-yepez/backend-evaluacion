@@ -3,7 +3,7 @@ const { getAllUsers, getByid, createUser, updateUser, deleteUser, getUserCount}=
 const { registerUser, loginUser } = require("../controllers/auth/authControllers");
 const { getEvaluacionCount } = require("../controllers/evaluacionController");
 const { getAllObjetivos, getObjetivoById, createObjetivo, updateObjetivoEstado, deleteObjetivo } = require("../controllers/objetivoControllers");
-const {getReport}= require("../controllers/reportControllers");
+const {getReport, getReportWithAI}= require("../controllers/reportControllers");
 
 const router = Router();
 
@@ -36,4 +36,5 @@ const router = Router();
     // reportes
     router.get("/reportes", getReport)
     router.post("/reportes", getReport)
+    router.get("/reportes/ai", getReportWithAI)
     module.exports= router;
