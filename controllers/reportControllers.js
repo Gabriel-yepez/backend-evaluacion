@@ -15,6 +15,23 @@ const getReport = async (req, res) => {
     }
 }
 
+const getReportWithAI = async (req, res) => {
+    try {
+        
+        const report = await services.getReportWithAI(req.body);
+        if (!report) return res.status(404).json({ message: "No se pudo generar el reporte con IA" });
+        
+        res.setHeader('Content-Type','application/pdf');
+        report.pipe(res);
+        report.end();
+
+    } catch (error) {
+        console.error('Error al generar reporte con IA:', error);
+        res.status(500).json({ error: 'Error interno del servidor', details: error.message });
+    }
+}
+
 module.exports = {
-    getReport
+    getReport,
+    getReportWithAI
 };
