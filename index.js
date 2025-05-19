@@ -9,6 +9,10 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors())
 app.use(morgan("dev")) 
+
+// Configuración para servir archivos estáticos
+app.use(express.static('public'));
+
 app.use("/api", routes);
 
 // Probar la conexión a la base de datos
