@@ -1,13 +1,32 @@
 const ReportServices = require('../services/reportServices');
 const services = new ReportServices();
 
+// Almacenamiento temporal de definiciones de documentos (en producción usaría Redis)
+const reportCache = new Map();
+
 const getReport = async (req, res) => {
     try {
-        const report = await services.getReport(req.body);
-        if (!report) return res.status(404).json({ message: "Report not found." });
-        res.setHeader('Content-Type','application/pdf');
-        report.pipe(res);
-        report.end();
+        // Generar un ID único para este reporte basado en datos del usuario y timestamp
+        const reportId = `report_${req.body.id_usuario}_${req.body.fecha}`;
+        
+        // Obtener la definición del documento y guardar una copia en caché
+        const { docDefinition, pdfStream } = await services.getReportWithDefinition(req.body);
+        
+        // Guardar la definición del documento en caché para uso posterior
+        reportCache.set(reportId, {
+            docDefinition,
+            reportData: req.body,
+            timestamp: Date.now(),
+            withAI: false
+        });
+        
+        // Configurar cabeceras con el ID del reporte para que el frontend lo capture
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('X-Report-ID', reportId); // ID para recuperar esta definición exacta
+        
+        // Enviar el PDF como antes
+        pdfStream.pipe(res);
+        pdfStream.end();
 
     } catch (error) {
         console.error(error);
@@ -17,13 +36,27 @@ const getReport = async (req, res) => {
 
 const getReportWithAI = async (req, res) => {
     try {
+        // Generar un ID único para este reporte con IA
+        const reportId = `report_ai_${req.body.id_usuario}_${req.body.fecha}`;
         
-        const report = await services.getReportWithAI(req.body);
-        if (!report) return res.status(404).json({ message: "No se pudo generar el reporte con IA" });
+        // Obtener la definición del documento y el stream PDF
+        const { docDefinition, pdfStream } = await services.getReportWithAIAndDefinition(req.body);
         
-        res.setHeader('Content-Type','application/pdf');
-        report.pipe(res);
-        report.end();
+        // Guardar la definición del documento en caché para uso posterior
+        reportCache.set(reportId, {
+            docDefinition,
+            reportData: req.body,
+            timestamp: Date.now(),
+            withAI: true
+        });
+        
+        // Configurar cabeceras con el ID del reporte para que el frontend lo capture
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('X-Report-ID', reportId); // ID para recuperar esta definición exacta
+        
+        // Enviar el PDF como antes
+        pdfStream.pipe(res);
+        pdfStream.end();
 
     } catch (error) {
         console.error('Error al generar reporte con IA:', error);
@@ -31,7 +64,26 @@ const getReportWithAI = async (req, res) => {
     }
 }
 
+// Método para obtener un reporte de la caché por ID
+const getReportDefinitionById = (reportId) => {
+    if (!reportCache.has(reportId)) {
+        return null;
+    }
+    
+    const cachedReport = reportCache.get(reportId);
+    
+    // Verificar si el reporte ha expirado (30 minutos)
+    const expirationTime = 30 * 60 * 1000; // 30 minutos en milisegundos
+    if (Date.now() - cachedReport.timestamp > expirationTime) {
+        reportCache.delete(reportId);
+        return null;
+    }
+    
+    return cachedReport;
+};
+
 module.exports = {
     getReport,
-    getReportWithAI
+    getReportWithAI,
+    getReportDefinitionById
 };
