@@ -11,6 +11,11 @@ class EvaluacionServices{
         const evaluacion= await Evaluacion.findAll()
         return evaluacion
     }
+
+    async createEvaluacion (evaluacionData){
+        const evaluacion = await Evaluacion.create(evaluacionData);
+        return evaluacion;
+    }
 }
 
 module.exports = EvaluacionServices
