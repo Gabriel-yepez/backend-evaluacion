@@ -1,5 +1,7 @@
-const userServices = require("../services/userServices")
-const services = new userServices()
+const userServices = require("../services/userServices");
+const AIService = require("./aiService");
+const services = new userServices();
+const aiService = new AIService();
 
 const style ={
     h1:{
@@ -83,7 +85,7 @@ const formatearFecha = (fecha) => {
     return `${dia}/${mes}/${year}`;
 }
 
-const maquetareport = async (data) => {
+const maquetareport = async (data, withAI = false) => {
     
    const {
             fecha,
@@ -119,7 +121,8 @@ const maquetareport = async (data) => {
     const user = await buscarUsuario(parseInt(id_usuario, 10));
     const {nombreFinal, apellidoFinal, ciFormateado} = user;
 
-    return{
+    // Crear el reporte base
+    const reporteBase = {
         header:{
                 text: `Fecha de Evaluacion: ${fechaFormateada}`,
                 alignment: 'right',
@@ -167,7 +170,49 @@ const maquetareport = async (data) => {
                 
             ],
             styles: style,
+    };
+
+    // Si se solicita con IA, agregar análisis de IA
+    if (withAI) {
+        try {
+            // Generar análisis de IA
+            const analisisIA = await aiService.generateAIComment(user, data);
+            
+            // Insertar el análisis de IA antes del "Fin de la evaluación"
+            const contenido = reporteBase.content;
+            // Remover el último elemento ("Fin de la evaluación")
+            const ultimoElemento = contenido.pop();
+            
+            // Añadir sección de IA
+            contenido.push(
+                {
+                    text: "Plan de mejora con IA",
+                    style: 'h1',
+                    margin: [0, 10]
+                },
+                {
+                    text: analisisIA,
+                    style: 'span',
+                    margin: [0, 5]
+                }
+            );
+            
+            // Volver a añadir el fin de la evaluación
+            contenido.push(ultimoElemento);
+        } catch (error) {
+            console.error('Error al generar análisis de IA:', error);
+            // Si hay un error, continuamos con el reporte base sin IA
+        }
     }
+    
+    return reporteBase
 }
 
-module.exports = maquetareport;
+const maquetareportWithAI = async (data) => {
+    return maquetareport(data, true);
+};
+
+module.exports = {
+    maquetareport,
+    maquetareportWithAI
+};
