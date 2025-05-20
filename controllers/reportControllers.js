@@ -6,8 +6,8 @@ const reportCache = new Map();
 
 const getReport = async (req, res) => {
     try {
-        // Generar un ID único para este reporte basado en datos del usuario y timestamp
-        const reportId = `report_${req.body.id_usuario}_${req.body.fecha}`;
+        // Generar un ID basado solo en usuario y fecha (igual para ambos tipos de reporte)
+        const reportId = `reporte_${req.body.id_usuario}_${req.body.fecha}`;
         
         // Obtener la definición del documento y guardar una copia en caché
         const { docDefinition, pdfStream } = await services.getReportWithDefinition(req.body);
@@ -23,7 +23,8 @@ const getReport = async (req, res) => {
         // Configurar cabeceras con el ID del reporte para que el frontend lo capture
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('X-Report-ID', reportId); // ID para recuperar esta definición exacta
-        
+        res.setHeader('Access-Control-Expose-Headers', 'X-Report-ID');
+
         // Enviar el PDF como antes
         pdfStream.pipe(res);
         pdfStream.end();
@@ -36,8 +37,8 @@ const getReport = async (req, res) => {
 
 const getReportWithAI = async (req, res) => {
     try {
-        // Generar un ID único para este reporte con IA
-        const reportId = `report_ai_${req.body.id_usuario}_${req.body.fecha}`;
+        // Usar el mismo formato de ID que el reporte normal para sobreescribirlo
+        const reportId = `reporte_${req.body.id_usuario}_${req.body.fecha}`;
         
         // Obtener la definición del documento y el stream PDF
         const { docDefinition, pdfStream } = await services.getReportWithAIAndDefinition(req.body);
@@ -53,7 +54,7 @@ const getReportWithAI = async (req, res) => {
         // Configurar cabeceras con el ID del reporte para que el frontend lo capture
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('X-Report-ID', reportId); // ID para recuperar esta definición exacta
-        
+        res.setHeader('Access-Control-Expose-Headers', 'X-Report-ID');
         // Enviar el PDF como antes
         pdfStream.pipe(res);
         pdfStream.end();
