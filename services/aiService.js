@@ -105,11 +105,11 @@ class AIService {
     let calificacion = "";
     const puntuacion = parseInt(evaluationData.puntuacion, 10);
     
-    if (puntuacion >= 90) {
+    if (puntuacion == 5) {
       calificacion = "excelente";
-    } else if (puntuacion >= 70) {
+    } else if (puntuacion < 5) {
       calificacion = "bueno";
-    } else if (puntuacion >= 50) {
+    } else if (puntuacion == 3) {
       calificacion = "satisfactorio";
     } else {
       calificacion = "necesita mejorar";
