@@ -11,24 +11,9 @@ const style = {
         margin: [0, 10, 0, 15],
         alignment: 'center'
     },
-    h2: {
-        fontSize: 14,
-        bold: true,
-        margin: [0, 8, 0, 4],
-    },
     span: {
         fontSize: 14,
         margin: [0, 3, 0, 5],
-    },
-    tableHeader: {
-        fontSize: 13,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 5, 0, 5]
-    },
-    tableCell: {
-        fontSize: 12,
-        margin: [0, 3, 0, 3]
     },
     sectionHeader: {
         fontSize: 16,
@@ -314,6 +299,11 @@ const maquetareport = async (data, withAI = false) => {
     const docDefinition = {
         header: {
             columns: [
+                {
+                    image: "./assets/fotoPerfil3.jpg",
+                    width: 60,
+                    margin: [10,0]
+                },
                 {
                     text: `Fecha: ${fechaFormateada}`,
                     alignment: 'right',
