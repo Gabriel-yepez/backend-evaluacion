@@ -26,7 +26,7 @@ const router = Router();
     //evaluaciones
     router.get("/evaluaciones/count", getEvaluacionCount)
     router.get("/evaluaciones", getAllEvaluacion)
-    router.post("/evaluaciones/completa", createEvaluacion)
+    router.post("/evaluaciones", createEvaluacion)
 
     // objetivos
     router.get("/objetivos", getAllObjetivos)

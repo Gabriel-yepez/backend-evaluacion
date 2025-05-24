@@ -1,9 +1,9 @@
-const { resultado_habilidad } = require ('../db/sequelize')
+const { ResultadoHabilidad } = require('../db/sequelize')
 
 class habilidadServices{
  
     async createHabilidad(habilidad){
-        const newhabilidad = await resultado_habilidad.create(habilidad)
+        const newhabilidad = await ResultadoHabilidad.create(habilidad)
         return newhabilidad
     }
 }

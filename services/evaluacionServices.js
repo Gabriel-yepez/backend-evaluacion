@@ -7,7 +7,7 @@ class EvaluacionServices{
         return count
     }
 
-    async geAllEvaluacion(){
+    async getAllEvaluacion(){
         const evaluacion= await Evaluacion.findAll()
         return evaluacion
     }

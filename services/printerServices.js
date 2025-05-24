@@ -48,7 +48,7 @@ class PrinterServices {
                 
                 pdfDoc.on('end', () => {
                     // Construir URL para el frontend
-                    const fileUrl = `/api/reports/${filename}`;
+                    const fileUrl = `/reports/${filename}`;
                     resolve({
                         success: true,
                         fileUrl,
