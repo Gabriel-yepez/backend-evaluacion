@@ -21,7 +21,7 @@ const getEvaluacionCount = async (req, res)=>{
 
 const getAllEvaluacion = async (req, res)=>{
     try {
-        const evaluacion = await evaluacionServices.getEvaluacion()
+        const evaluacion = await evaluacionServices.getAllEvaluacion()
 
         if(evaluacion.length === 0) return res.status(404).json({ message: "no evaluaciones Found."});
         res.status(200).json(evaluacion)
@@ -61,9 +61,9 @@ const createEvaluacion = async (req, res) => {
         
         // 2. Luego crear la evaluación con la URL del PDF
         const evaluacionData = {
-            fecha: new Date(),
+            fecha: reportData.fecha,
             comentario: reportData.comentarioEvaluacion || 'Sin comentarios',
-            estado: true,
+            estado: false,
             url: pdfResult.fileUrl,
             id_usuario: reportData.id_usuario
         };
@@ -71,25 +71,16 @@ const createEvaluacion = async (req, res) => {
         const evaluacion = await evaluacionServices.createEvaluacion(evaluacionData);
         
         // 3. Finalmente crear la habilidad asociada
-        if (reportData.comentarioHabilidad) {
-            const habilidadData = {
-                descripcion: reportData.comentarioHabilidad,
-                id_evaluacion: evaluacion.id
-            };
-            
-            const habilidad = await habilidadServices.createHabilidad(habilidadData);
-            
-            // Retornar respuesta completa con evaluación, habilidad y URL del PDF
-            return res.status(201).json({
-                success: true,
-                message: "Evaluación creada exitosamente con habilidad",
-                evaluacion,
-                habilidad,
-                reportUrl: pdfResult.fileUrl
-            });
-        }
         
-        // Retornar respuesta sin habilidad
+        const habilidadData = {
+            puntuacion: reportData.puntuacion,
+            comentario: reportData.comentarioHabilidad,
+            id_evaluacion: evaluacion.id
+        };
+            
+        const habilidad = await habilidadServices.createHabilidad(habilidadData);
+              
+        // Retornar respuesta 
         return res.status(201).json({
             success: true,
             message: "Evaluación creada exitosamente",
