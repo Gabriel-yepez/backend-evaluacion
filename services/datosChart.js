@@ -1,7 +1,5 @@
-const { EvaluacionServices } = require("./evaluacionServices")
 const { Op } = require('sequelize');
-
-const services = new EvaluacionServices()
+const { Evaluacion } = require('../db/sequelize');
 
 const generarConteoGeneral = async () => {
   // Inicializar array con todos los meses y contadores en cero
@@ -31,7 +29,7 @@ const generarConteoGeneral = async () => {
   };
   
   // Buscar siempre las evaluaciones en la base de datos cuando se hace la petición
-  const evaluaciones = await services.findAll({
+  const evaluaciones = await Evaluacion.findAll({
     where: whereClause,
     attributes: ['id', 'fecha'],
     raw: true
@@ -64,7 +62,7 @@ const generarConteoUsuario = async (idUsuario) => {
   }
   
   // Buscar siempre las evaluaciones en la base de datos cuando se hace la petición
-  const evaluaciones = await services.findAll({
+  const evaluaciones = await Evaluacion.findAll({
     where: whereClause,
     attributes: ['id', 'fecha', 'id_usuario'],
     raw: true

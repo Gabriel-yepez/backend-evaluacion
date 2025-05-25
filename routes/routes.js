@@ -1,7 +1,7 @@
 const { Router }= require ("express");
 const { getAllUsers, getByid, createUser, updateUser, deleteUser, getUserCount}= require("../controllers/userControllers");
 const { registerUser, loginUser } = require("../controllers/auth/authControllers");
-const { getEvaluacionCount, getAllEvaluacion, createEvaluacion } = require("../controllers/evaluacionController");
+const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasGenerales, getEstadisticasUsuario } = require("../controllers/evaluacionController");
 const { getAllObjetivos, getObjetivoById, createObjetivo, updateObjetivoEstado, deleteObjetivo } = require("../controllers/objetivoControllers");
 const {getReport, getReportWithAI}= require("../controllers/reportControllers");
 
@@ -27,6 +27,8 @@ const router = Router();
     router.get("/evaluaciones/count", getEvaluacionCount)
     router.get("/evaluaciones", getAllEvaluacion)
     router.post("/evaluaciones", createEvaluacion)
+    router.get("/evaluaciones/grafica", getEstadisticasGenerales)
+    router.get("/evaluaciones/grafica/:idUsuario", getEstadisticasUsuario)
 
     // objetivos
     router.get("/objetivos", getAllObjetivos)

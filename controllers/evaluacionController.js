@@ -2,6 +2,7 @@ const EvaluacionServices = require("../services/evaluacionServices");
 const HabilidadServices = require("../services/habilidadServices");
 const PrinterServices = require("../services/printerServices");
 const { getReportDefinitionById } = require('../controllers/reportControllers');
+const { generarConteoGeneral, generarConteoUsuario } = require('../services/datosChart');
 
 const evaluacionServices = new EvaluacionServices();
 const habilidadServices = new HabilidadServices();
@@ -98,8 +99,55 @@ const createEvaluacion = async (req, res) => {
     }
 }
 
+const getEstadisticasGenerales = async (req, res) => {
+  try {
+    const estadisticasMensuales = await generarConteoGeneral();
+    
+    res.status(200).json({
+      success: true,
+      data: estadisticasMensuales
+    });
+  } catch (error) {
+    console.error('Error al obtener estadísticas generales:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor',
+      details: error.message
+    });
+  }
+};
+
+const getEstadisticasUsuario = async (req, res) => {
+  try {
+    const { idUsuario } = req.params;
+    
+    if (!idUsuario) {
+      return res.status(400).json({
+        success: false,
+        message: "Se requiere el ID del usuario"
+      });
+    }
+    
+    const estadisticasUsuario = await generarConteoUsuario(idUsuario);
+    
+    res.status(200).json({
+      success: true,
+      data: estadisticasUsuario
+    });
+  } catch (error) {
+    console.error('Error al obtener estadísticas del usuario:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor',
+      details: error.message
+    });
+  }
+};
+
 module.exports = {
   getEvaluacionCount,
   getAllEvaluacion,
-  createEvaluacion
+  createEvaluacion,
+  getEstadisticasGenerales,
+  getEstadisticasUsuario
 }
