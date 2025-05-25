@@ -37,8 +37,10 @@ const generarConteoGeneral = async () => {
   
   // Procesar cada evaluación y contar por mes
   evaluaciones.forEach(evaluacion => {
-    const fecha = new Date(evaluacion.fecha);
-    const mes = fecha.getMonth(); // 0-11
+    // Asegurar que la fecha se interprete correctamente, independiente de la zona horaria
+    const fechaString = evaluacion.fecha.split('T')[0]; // Obtener solo la parte de la fecha YYYY-MM-DD
+    const [year, month, day] = fechaString.split('-').map(Number);
+    const mes = month - 1; // Ajustar porque month es 1-12 pero los índices son 0-11
     estadisticasMensuales[mes].evaluaciones += 1;
   });
 
@@ -95,8 +97,10 @@ const generarConteoUsuario = async (idUsuario) => {
   // Procesar cada evaluación
   evaluaciones.forEach(evaluacion => {
     const idUsuario = evaluacion.id_usuario;
-    const fecha = new Date(evaluacion.fecha);
-    const mes = fecha.getMonth(); // 0-11
+    // Asegurar que la fecha se interprete correctamente, independiente de la zona horaria
+    const fechaString = evaluacion.fecha.split('T')[0]; // Obtener solo la parte de la fecha YYYY-MM-DD
+    const [year, month, day] = fechaString.split('-').map(Number);
+    const mes = month - 1; // Ajustar porque month es 1-12 pero los índices son 0-11
     
     // Incrementar contador para este usuario y mes
     if (estadisticasPorUsuario[idUsuario]) {
