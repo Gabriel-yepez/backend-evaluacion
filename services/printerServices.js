@@ -30,9 +30,19 @@ class PrinterServices {
     savePdf = async (docDefinition, userId, fecha) => {
         return new Promise((resolve, reject) => {
             try {
-                // Crear un nombre de archivo único
-                const filename = `reporte_${userId}_${fecha}.pdf`;
-                const filePath = path.join(REPORTS_DIR, filename);
+                // Crear un nombre de archivo base
+                let baseFilename = `reporte_${userId}_${fecha}`;
+                let filename = `${baseFilename}.pdf`;
+                let filePath = path.join(REPORTS_DIR, filename);
+                
+                // Verificar si el archivo ya existe y crear uno con nombre único
+                let counter = 1;
+                while (fs.existsSync(filePath)) {
+                    // Si ya existe, agregar un número secuencial
+                    filename = `${baseFilename} (${counter}).pdf`;
+                    filePath = path.join(REPORTS_DIR, filename);
+                    counter++;
+                }
                 
                 // Crear el documento PDF
                 const pdfDoc = PrinterServices.printer.createPdfKitDocument(docDefinition);

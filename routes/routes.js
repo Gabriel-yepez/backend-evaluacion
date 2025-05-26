@@ -1,9 +1,10 @@
 const { Router }= require ("express");
 const { getAllUsers, getByid, createUser, updateUser, deleteUser, getUserCount}= require("../controllers/userControllers");
 const { registerUser, loginUser } = require("../controllers/auth/authControllers");
-const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasGenerales, getEstadisticasUsuario } = require("../controllers/evaluacionController");
+const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasGenerales, getEstadisticasUsuario, getUserEvaluationCount } = require("../controllers/evaluacionController");
 const { getAllObjetivos, getObjetivoById, createObjetivo, updateObjetivoEstado, deleteObjetivo } = require("../controllers/objetivoControllers");
 const {getReport, getReportWithAI}= require("../controllers/reportControllers");
+const { getAllRetroalimentaciones, getRetroalimentacionById, createRetroalimentacion, updateRetroalimentacion, deleteRetroalimentacion, getRetroalimentacionesByUsuario, getRetroalimentacionesByEvaluacion } = require("../controllers/retroalimentacionControllers");
 
 const router = Router();
 
@@ -25,6 +26,7 @@ const router = Router();
 
     //evaluaciones
     router.get("/evaluaciones/count", getEvaluacionCount)
+    router.get("/evaluaciones/count/:userId", getUserEvaluationCount)
     router.get("/evaluaciones", getAllEvaluacion)
     router.post("/evaluaciones", createEvaluacion)
     router.get("/evaluaciones/grafica", getEstadisticasGenerales)
@@ -41,4 +43,14 @@ const router = Router();
     router.get("/reportes", getReport)
     router.post("/reportes", getReport)
     router.post("/reportes/ai", getReportWithAI)
+    
+    // retroalimentaciones
+    router.get("/retroalimentacion", getAllRetroalimentaciones)
+    router.get("/retroalimentacion/:id", getRetroalimentacionById)
+    router.post("/retroalimentacion", createRetroalimentacion)
+    router.put("/retroalimentacion/:id", updateRetroalimentacion)
+    router.delete("/retroalimentacion/:id", deleteRetroalimentacion)
+    router.get("/retroalimentacion/usuario/:idUsuario", getRetroalimentacionesByUsuario)
+    router.get("/retroalimentacion/evaluacion/:idEvaluacion", getRetroalimentacionesByEvaluacion)
+    
     module.exports= router;
