@@ -144,10 +144,37 @@ const getEstadisticasUsuario = async (req, res) => {
   }
 };
 
+// Nuevo endpoint para que un empleado vea su total de evaluaciones
+const getUserEvaluationCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Se requiere el ID del usuario"
+      });
+    }
+
+    // Obtener el conteo de evaluaciones para este usuario específico
+    const evaluacionCount = await evaluacionServices.getEvaluacionCountByUser(userId);
+    
+    res.status(200).json(evaluacionCount);
+  } catch (error) {
+    console.error('Error al obtener conteo de evaluaciones del usuario:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor',
+      details: error.message
+    });
+  }
+};
+
 module.exports = {
   getEvaluacionCount,
   getAllEvaluacion,
   createEvaluacion,
   getEstadisticasGenerales,
-  getEstadisticasUsuario
+  getEstadisticasUsuario,
+  getUserEvaluationCount
 }
