@@ -1,9 +1,19 @@
 const {Retroalimentacion} = require('../db/sequelize')
+const EvaluacionServices = require('./evaluacionServices')
 
 class RetroalimentacionServices {
+    constructor() {
+        this.evaluacionServices = new EvaluacionServices();
+    }
 
     async createRetroalimentacion(retroalimentacion) {
         const newRetroalimentacion = await Retroalimentacion.create(retroalimentacion)
+        
+        // Actualizar el estado de la evaluación asociada a true
+        if (retroalimentacion.id_evaluacion) {
+            await this.evaluacionServices.updateEvaluacion(retroalimentacion.id_evaluacion);
+        }
+        
         return newRetroalimentacion
     }
 

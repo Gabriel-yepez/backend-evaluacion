@@ -23,6 +23,16 @@ class EvaluacionServices{
         const evaluacion = await Evaluacion.create(evaluacionData);
         return evaluacion;
     }
+
+    async updateEvaluacion(id){
+        const evaluacion = await Evaluacion.findByPk(id);
+        const estado=true
+        if (evaluacion) {
+            // Asegúrate de pasar un objeto con los campos a actualizar
+            const updatedEvaluacion = await evaluacion.update({ estado });
+            return updatedEvaluacion;
+        }
+    }
 }
 
 module.exports = EvaluacionServices
