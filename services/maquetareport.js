@@ -34,7 +34,7 @@ const extraerObjetivos = (objetivos) => {
     return objetivos.map(obj => {
         const { descripcion, estado_actual, fecha_inicio, fecha_fin  } = obj;
 
-        const periodoComppleto= `${formatearFecha(fecha_inicio)}-${formatearFecha(fecha_fin)}`
+        const periodoComppleto= `${formatearFecha(fecha_inicio)} - ${formatearFecha(fecha_fin)}`
         return { descripcion, estado_actual, periodoComppleto};
     });
 }
