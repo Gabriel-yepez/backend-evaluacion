@@ -5,6 +5,8 @@ const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasG
 const { getAllObjetivos, getObjetivoById, createObjetivo, updateObjetivoEstado, deleteObjetivo } = require("../controllers/objetivoControllers");
 const {getReport, getReportWithAI}= require("../controllers/reportControllers");
 const { getAllRetroalimentaciones, getRetroalimentacionById, createRetroalimentacion, updateRetroalimentacion, deleteRetroalimentacion, getRetroalimentacionesByUsuario, getRetroalimentacionesByEvaluacion } = require("../controllers/retroalimentacionControllers");
+const { uploadDocument, deleteDocument, getDocuments } = require("../controllers/documentController");
+const upload = require("../middleware/uploadMiddleware");
 
 const router = Router();
 
@@ -52,5 +54,10 @@ const router = Router();
     router.delete("/retroalimentacion/:id", deleteRetroalimentacion)
     router.get("/retroalimentacion/usuario/:idUsuario", getRetroalimentacionesByUsuario)
     router.get("/retroalimentacion/evaluacion/:idEvaluacion", getRetroalimentacionesByEvaluacion)
+    
+    // documentos
+    router.post("/documentos", upload.single('document'), uploadDocument)
+    router.get("/documentos", getDocuments)
+    router.delete("/documentos/:fileName", deleteDocument)
     
     module.exports= router;
