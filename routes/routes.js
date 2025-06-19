@@ -1,11 +1,12 @@
 const { Router }= require ("express");
 const { getAllUsers, getByid, createUser, updateUser, deleteUser, getUserCount}= require("../controllers/userControllers");
 const { registerUser, loginUser } = require("../controllers/auth/authControllers");
-const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasGenerales, getEstadisticasUsuario, getUserEvaluationCount } = require("../controllers/evaluacionController");
+const { getEvaluacionCount, getAllEvaluacion, createEvaluacion, getEstadisticasGenerales, getEstadisticasUsuario, getUserEvaluationCount, deleteEvaluacion } = require("../controllers/evaluacionController");
 const { getAllObjetivos, getObjetivoById, createObjetivo, updateObjetivoEstado, deleteObjetivo } = require("../controllers/objetivoControllers");
 const {getReport, getReportWithAI}= require("../controllers/reportControllers");
 const { getAllRetroalimentaciones, getRetroalimentacionById, createRetroalimentacion, updateRetroalimentacion, deleteRetroalimentacion, getRetroalimentacionesByUsuario, getRetroalimentacionesByEvaluacion } = require("../controllers/retroalimentacionControllers");
 const { uploadDocument, deleteDocument, getDocuments } = require("../controllers/documentController");
+const { deleteHabilidad } = require("../controllers/habilidadControllers");
 const upload = require("../middleware/uploadMiddleware");
 
 const router = Router();
@@ -33,7 +34,7 @@ const router = Router();
     router.post("/evaluaciones", createEvaluacion)
     router.get("/evaluaciones/grafica", getEstadisticasGenerales)
     router.get("/evaluaciones/grafica/:idUsuario", getEstadisticasUsuario)
-
+    router.delete("/evaluaciones/:id", deleteEvaluacion)
     // objetivos
     router.get("/objetivos", getAllObjetivos)
     router.get("/objetivos/:id", getObjetivoById)
@@ -60,4 +61,7 @@ const router = Router();
     router.get("/documentos", getDocuments)
     router.delete("/documentos/:fileName", deleteDocument)
     
+    // habilidades
+    router.delete("/habilidades/:id", deleteHabilidad)
+
     module.exports= router;
