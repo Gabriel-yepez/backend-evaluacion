@@ -54,7 +54,7 @@ const deleteRetroalimentacion = async (req, res) => {
     try {
         const retroalimentacion = await services.deleteRetroalimentacion(req.params.id)
         if (!retroalimentacion) return res.status(404).json({ message: "Retroalimentación no encontrada para eliminar." });
-        res.status(200).json(retroalimentacion)
+        res.status(200).json({message: "Retroalimentación eliminada exitosamente."})
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
