@@ -170,11 +170,23 @@ const getUserEvaluationCount = async (req, res) => {
   }
 };
 
+const deleteEvaluacion = async (req, res) => {
+    try {
+        const evaluacion = await evaluacionServices.deleteEvaluacion(req.params.id)
+        if (!evaluacion) return res.status(404).json({ message: "Evaluación no encontrada para eliminar." });
+        res.status(200).json(evaluacion)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+}
+
 module.exports = {
   getEvaluacionCount,
   getAllEvaluacion,
   createEvaluacion,
   getEstadisticasGenerales,
   getEstadisticasUsuario,
-  getUserEvaluationCount
+  getUserEvaluationCount,
+  deleteEvaluacion
 }

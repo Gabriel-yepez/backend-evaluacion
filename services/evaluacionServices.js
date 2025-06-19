@@ -33,6 +33,15 @@ class EvaluacionServices{
             return updatedEvaluacion;
         }
     }
+
+    async deleteEvaluacion(id){
+        const evaluacion = await Evaluacion.findByPk(id);
+        if(evaluacion){
+            const borrar = await evaluacion.destroy()
+            return borrar !== null
+        }
+        return evaluacion
+    }
 }
 
 module.exports = EvaluacionServices
