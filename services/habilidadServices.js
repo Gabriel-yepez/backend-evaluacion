@@ -7,6 +7,11 @@ class habilidadServices{
         return newhabilidad
     }
 
+    async getHabilidad(){
+        const habilidad = await ResultadoHabilidad.findAll();
+        return habilidad
+    }
+
     async deleteHabilidad(id){
         const habilidad = await ResultadoHabilidad.findByPk(id);
         if(habilidad){
