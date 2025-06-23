@@ -12,7 +12,7 @@ const getEvaluacionCount = async (req, res)=>{
 
     try {
         const count = await evaluacionServices.getEvaluacionCount()
-        if (!count) return res.status(404).json({ message: "no evaluaciones Found.",count });
+        if (!count) return res.status(404).json(count );
         res.status(200).json(count)
       } catch (error) {
         console.log(error)
