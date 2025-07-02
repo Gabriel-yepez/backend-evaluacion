@@ -335,8 +335,25 @@ const maquetareport = async (data, withAI = false) => {
     // Si es con IA, agregar la sección correspondiente
     if (withAI) {
         try {
+            console.log('Intentando generar análisis de IA...');
             // Generar análisis de IA
-            const analisisIA = await aiService.generateAIComment(user, data);
+            let analisisIA = await aiService.generateAIComment(user, data);
+            console.log('Análisis IA recibido:', analisisIA);
+            console.log('Tipo de dato recibido:', typeof analisisIA);
+            
+            // Verificar que el análisis no sea vacío o nulo y asegurarse de que sea string
+            if (analisisIA === null || analisisIA === undefined) {
+                throw new Error('El análisis de IA es nulo o indefinido');
+            }
+            
+            // Convertir a string si no lo es
+            analisisIA = String(analisisIA);
+            
+            if (analisisIA.trim() === '') {
+                throw new Error('El análisis de IA generado está vacío');
+            }
+            
+            console.log('Análisis IA validado:', analisisIA.substring(0, 50) + '...');
             
             // Encontrar la posición de seccionPuntuacion
             const seccionIndex = docDefinition.content.findIndex(item => 
@@ -345,8 +362,25 @@ const maquetareport = async (data, withAI = false) => {
             
             // Insertar la sección de IA DESPUÉS de seccionPuntuacion
             if (seccionIndex !== -1) {
+                console.log('Insertando análisis de IA en el documento...');
                 // Insertar después (+1) de la posición de seccionPuntuacion
                 docDefinition.content.splice(seccionIndex + 1, 0,
+                    {
+                        text: 'Plan de mejora con IA',
+                        style: 'sectionHeader',
+                        margin: [0, 30, 0, 10],
+                        pageBreak: 'before'
+                    },
+                    {
+                        text: analisisIA,
+                        style: 'span',
+                        margin: [0, 5, 0, 20]
+                    }
+                );
+            } else {
+                console.error('No se encontró la sección de puntuación para insertar el análisis de IA');
+                // Añadir al final si no se encuentra la posición
+                docDefinition.content.push(
                     {
                         text: 'Plan de mejora con IA',
                         style: 'sectionHeader',
@@ -362,6 +396,28 @@ const maquetareport = async (data, withAI = false) => {
             }
         } catch (error) {
             console.error('Error al generar análisis de IA:', error);
+            
+            // Agregar mensaje de error al documento
+            const seccionIndex = docDefinition.content.findIndex(item => 
+                item === seccionPuntuacion
+            );
+            
+            if (seccionIndex !== -1) {
+                docDefinition.content.splice(seccionIndex + 1, 0,
+                    {
+                        text: 'Plan de mejora con IA',
+                        style: 'sectionHeader',
+                        margin: [0, 30, 0, 10],
+                        pageBreak: 'before'
+                    },
+                    {
+                        text: `No se pudo generar el análisis de IA. Error: ${error.message}`,
+                        style: 'span',
+                        color: 'red',
+                        margin: [0, 5, 0, 20]
+                    }
+                );
+            }
         }
     }
     
