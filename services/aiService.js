@@ -107,7 +107,7 @@ class AIService {
             Contexto: ${contexto}` },
           { role: 'user', content: prompt }
         ],
-        max_tokens: 2000, // Aumentado para evitar truncamiento
+        max_tokens: 4000, // Aumentado significativamente para evitar truncamiento
         temperature: 0.5 // Reducido para respuestas más consistentes y precisas
       });
       
@@ -178,6 +178,23 @@ class AIService {
           }
         }
       } else {
+        console.log('No se encontró contenido en español, intentando traducción automática del contenido en inglés');
+        
+        // Si tenemos reasoning_content en inglés, intentar usarlo con traducción
+        if (message.reasoning_content && message.reasoning_content.trim() !== '') {
+          try {
+            // Función para traducir texto de inglés a español usando el mismo modelo DeepSeek
+            const translatedContent = await this._translateFromEnglish(message.reasoning_content);
+            if (translatedContent && translatedContent.trim() !== '') {
+              content = translatedContent;
+              console.log('Contenido traducido automáticamente del inglés');
+              return content;
+            }
+          } catch (translationError) {
+            console.error('Error en la traducción automática:', translationError);
+          }
+        }
+        
         console.error('No se encontró contenido válido en la respuesta de DeepSeek');
         return "La API de DeepSeek devolvió contenido vacío. Utilizando análisis simulado.\n\n" + 
                this._generateSimulatedComment(userData, evaluationData);
@@ -238,6 +255,45 @@ class AIService {
     - Programar seguimiento en 3 meses para verificar mejoras
     
     Este análisis fue generado automáticamente y debe considerarse como complementario a la evaluación humana.`;
+  }
+  
+  // Método para traducir contenido de inglés a español
+  async _translateFromEnglish(englishContent) {
+    try {
+      console.log('Intentando traducir contenido de inglés a español...');
+      
+      // Si el contenido es demasiado largo, tomamos solo los primeros 3000 caracteres
+      // para evitar exceder límites de la API
+      const contentToTranslate = englishContent.length > 3000 ? 
+        englishContent.substring(0, 3000) : englishContent;
+      
+      const response = await this.client.chat.completions.create({
+        model: 'deepseek-reasoner',
+        messages: [
+          { 
+            role: 'system', 
+            content: 'Eres un traductor profesional especializado en traducir textos técnicos y de negocios del inglés al español. Traduce el siguiente texto a español natural, manteniendo la estructura y formato original.' 
+          },
+          { 
+            role: 'user', 
+            content: `Traduce este texto de inglés a español, manteniendo todos los formatos, listas y estructura:
+            
+            ${contentToTranslate}` 
+          }
+        ],
+        max_tokens: 4000,
+        temperature: 0.3 // Bajo para traducciones más precisas
+      });
+      
+      if (response && response.choices && response.choices.length > 0 && response.choices[0].message) {
+        return response.choices[0].message.content || '';
+      }
+      
+      return '';
+    } catch (error) {
+      console.error('Error en la traducción:', error);
+      return '';
+    }
   }
 }
 

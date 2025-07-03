@@ -297,20 +297,27 @@ const maquetareport = async (data, withAI = false) => {
     
     // Definir estructura del documento
     const docDefinition = {
-        header: {
-            columns: [
-                {
+        // Definir una función para el encabezado que verifica el número de página
+        header: function(currentPage) {
+            // Siempre incluimos la fecha en todas las páginas
+            const headerColumns = [
+                // Solo incluir la imagen en la primera página
+                currentPage === 1 ? {
                     image: "./assets/fotoPerfil3.jpg",
                     width: 60,
-                    margin: [10,0]
-                },
+                    margin: [10, 0]
+                } : {},
                 {
                     text: `Fecha: ${fechaFormateada}`,
                     alignment: 'right',
                     fontSize: 12,
                 }
-            ],
-            margin: [15, 15, 15, 30]
+            ];
+            
+            return {
+                columns: headerColumns,
+                margin: [15, 15, 15, 30]
+            };
         },
         content: [
             {
